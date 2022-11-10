@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-const createAccount = `-- name: CreateAccount :exec
+const createAccount = `-- name: CreateAccount :execresult
 insert into account (account_owner, balance, currency) values (?, ?, ?)
 `
 
@@ -20,9 +20,8 @@ type CreateAccountParams struct {
 	Currency     string `json:"currency"`
 }
 
-func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) error {
-	_, err := q.db.ExecContext(ctx, createAccount, arg.AccountOwner, arg.Balance, arg.Currency)
-	return err
+func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, createAccount, arg.AccountOwner, arg.Balance, arg.Currency)
 }
 
 const deleteAccount = `-- name: DeleteAccount :exec

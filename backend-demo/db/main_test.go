@@ -21,7 +21,7 @@ type mysqlTestSuite struct {
 func TestMySQL(t *testing.T) {
 	suite.Run(t, &mysqlTestSuite{
 		dbDriver: "mysql",
-		dbSource: "root:u2E3WWtgam@tcp(192.168.3.50:31964)/simple_bank",
+		dbSource: "root:u2E3WWtgam@tcp(192.168.3.50:31964)/simple_bank?parseTime=true",
 	})
 }
 

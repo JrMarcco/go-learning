@@ -1,4 +1,4 @@
--- name: CreateAccount :exec
+-- name: CreateAccount :execresult
 insert into account (account_owner, balance, currency) values (?, ?, ?);
 
 -- name: GetAccount :one

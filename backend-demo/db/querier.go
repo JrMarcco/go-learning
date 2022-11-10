@@ -6,10 +6,15 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 type Querier interface {
-	CreateAccount(ctx context.Context, arg CreateAccountParams) error
+	CreateAccount(ctx context.Context, arg CreateAccountParams) (sql.Result, error)
+	DeleteAccount(ctx context.Context, id sql.NullInt64) error
+	GetAccount(ctx context.Context, id sql.NullInt64) (Account, error)
+	ListAccount(ctx context.Context, arg ListAccountParams) ([]Account, error)
+	UpdateAccount(ctx context.Context, arg UpdateAccountParams) error
 }
 
 var _ Querier = (*Queries)(nil)
