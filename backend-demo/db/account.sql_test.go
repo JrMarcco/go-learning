@@ -80,13 +80,13 @@ func (m *mysqlTestSuite) TestDeleteAccount() {
 func (m *mysqlTestSuite) TestUpdateAccount() {
 	t := m.T()
 
-	args := CreateAccountParams{
+	createArgs := CreateAccountParams{
 		AccountOwner: util.RandomString(6),
 		Balance:      util.RandomInt64(100, 10000),
 		Currency:     "RMB",
 	}
 
-	id := m.createAccount(t, args)
+	id := m.createAccount(t, createArgs)
 	updateArgs := UpdateAccountParams{
 		ID: sql.NullInt64{
 			Int64: id,
