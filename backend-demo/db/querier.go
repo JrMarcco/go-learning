@@ -10,13 +10,14 @@ import (
 )
 
 type Querier interface {
+	AddBalance(ctx context.Context, arg AddBalanceParams) error
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (sql.Result, error)
 	CreateEntry(ctx context.Context, arg CreateEntryParams) (sql.Result, error)
 	CreateTransfer(ctx context.Context, arg CreateTransferParams) (sql.Result, error)
 	DeleteAccount(ctx context.Context, id sql.NullInt64) error
 	GetAccount(ctx context.Context, id sql.NullInt64) (Account, error)
+	GetAccountForUpdate(ctx context.Context, id sql.NullInt64) (Account, error)
 	ListAccount(ctx context.Context, arg ListAccountParams) ([]Account, error)
-	UpdateAccount(ctx context.Context, arg UpdateAccountParams) error
 }
 
 var _ Querier = (*Queries)(nil)

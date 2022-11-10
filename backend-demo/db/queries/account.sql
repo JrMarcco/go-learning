@@ -3,14 +3,18 @@ insert into account (account_owner, balance, currency) values (?, ?, ?);
 
 -- name: GetAccount :one
 select * from account
-         where id = ? limit 1;
+where id = ? limit 1;
+
+-- name: GetAccountForUpdate :one
+select * from account
+where id = ? limit 1 for update;
 
 -- name: ListAccount :many
 select * from account
-         order by id limit ?, ?;
+order by id limit ?, ?;
 
--- name: UpdateAccount :exec
-update account set balance = ? where id = ?;
+-- name: AddBalance :exec
+update account set balance = balance + sqlc.arg(amount) where id = ?;
 
 -- name: DeleteAccount :exec
 delete from account where id = ? limit 1;

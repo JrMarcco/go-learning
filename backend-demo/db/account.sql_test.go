@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/stretchr/testify/require"
 	"go-learning/backend-demo/util"
+	"math/rand"
 	"testing"
 )
 
@@ -77,7 +78,7 @@ func (m *mysqlTestSuite) TestDeleteAccount() {
 	require.Empty(t, account)
 }
 
-func (m *mysqlTestSuite) TestUpdateAccount() {
+func (m *mysqlTestSuite) TestAddBalance() {
 	t := m.T()
 
 	createArgs := CreateAccountParams{
@@ -87,15 +88,15 @@ func (m *mysqlTestSuite) TestUpdateAccount() {
 	}
 
 	id := m.createAccount(t, createArgs)
-	updateArgs := UpdateAccountParams{
+	addArgs := AddBalanceParams{
 		ID: sql.NullInt64{
 			Int64: id,
 			Valid: true,
 		},
-		Balance: util.RandomInt64(100, 10000),
+		Amount: rand.Int63n(10),
 	}
 
-	err := m.queries.UpdateAccount(context.Background(), updateArgs)
+	err := m.queries.AddBalance(context.Background(), addArgs)
 	require.NoError(t, err)
 
 	account, err := m.queries.GetAccount(context.Background(), sql.NullInt64{
@@ -104,5 +105,5 @@ func (m *mysqlTestSuite) TestUpdateAccount() {
 	})
 
 	require.NoError(t, err)
-	require.Equal(t, updateArgs.Balance, account.Balance)
+	require.Equal(t, createArgs.Balance+addArgs.Amount, account.Balance)
 }

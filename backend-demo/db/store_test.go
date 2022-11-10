@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"github.com/stretchr/testify/require"
 	"go-learning/backend-demo/util"
 )
@@ -22,6 +23,13 @@ func (m *mysqlTestSuite) TestTransferTx() {
 		Currency:     "RMB",
 	})
 
+	account1, err := m.queries.GetAccount(context.Background(), sql.NullInt64{Int64: aid1, Valid: true})
+	require.NoError(t, err)
+	account2, err := m.queries.GetAccount(context.Background(), sql.NullInt64{Int64: aid2, Valid: true})
+	require.NoError(t, err)
+
+	t.Log("before: ", account1.Balance, account2.Balance)
+
 	amount := int64(10)
 	n := 5
 
@@ -41,11 +49,12 @@ func (m *mysqlTestSuite) TestTransferTx() {
 		}()
 	}
 
+	existed := make(map[int]struct{}, n)
 	for i := 0; i < n; i++ {
 		err := <-errs
-		res := <-results
-
 		require.NoError(t, err)
+
+		res := <-results
 
 		// check transfer
 		require.NotEmpty(t, res.Transfer)
@@ -63,5 +72,30 @@ func (m *mysqlTestSuite) TestTransferTx() {
 		require.NotEmpty(t, res.ToEntry)
 		require.Equal(t, aid2, res.ToEntry.AccountID)
 		require.Equal(t, amount, res.ToEntry.Amount)
+
+		// check from account and to account
+		require.NotEmpty(t, res.FromAccount)
+		require.Equal(t, account1.ID, res.FromAccount.ID)
+		require.NotEmpty(t, res.ToAccount)
+		require.Equal(t, account2.ID, res.ToAccount.ID)
+
+		// check the transfer amount
+		diff1 := account1.Balance - res.FromAccount.Balance
+		diff2 := res.ToAccount.Balance - account2.Balance
+		require.True(t, diff1 == diff2 && diff1%amount == 0)
+
+		k := int(diff1 / amount)
+		require.True(t, k >= 1 && k <= n)
+		require.NotContains(t, existed, k)
+		existed[k] = struct{}{}
 	}
+
+	updatedAccount1, err := m.queries.GetAccount(context.Background(), account1.ID)
+	require.NoError(t, err)
+	updatedAccount2, err := m.queries.GetAccount(context.Background(), account2.ID)
+	require.NoError(t, err)
+
+	t.Log("after: ", updatedAccount1.Balance, updatedAccount2.Balance)
+	require.Equal(t, int64(n)*amount, account1.Balance-updatedAccount1.Balance)
+	require.Equal(t, int64(n)*amount, updatedAccount2.Balance-account2.Balance)
 }
