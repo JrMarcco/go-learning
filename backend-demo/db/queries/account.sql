@@ -5,10 +5,6 @@ insert into account (account_owner, balance, currency) values (?, ?, ?);
 select * from account
 where id = ? limit 1;
 
--- name: GetAccountForUpdate :one
-select * from account
-where id = ? limit 1 for update;
-
 -- name: ListAccount :many
 select * from account
 order by id limit ?, ?;
