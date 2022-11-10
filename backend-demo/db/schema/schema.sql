@@ -19,7 +19,7 @@ create table entry
     primary key (id) using btree
 ) engine innodb comment = 'entries';
 
-create index entries_account_index on entries (account_id);
+create index entry_account_index on entry (account_id);
 
 create table transfer
 (
