@@ -85,6 +85,12 @@ func (s *Store) TransferTx(ctx context.Context, args TransferTxParams) (Transfer
 			return err
 		}
 
+		// ensure that fromID lt toID
+		if args.FromID > args.ToID {
+			args.FromID, args.ToID = args.ToID, args.FromID
+			args.Amount = -args.Amount
+		}
+
 		// update from account balance
 		txRes.FromAccount, err = doWithAccount(ctx, args.FromID, -args.Amount, queries)
 		if err != nil {
