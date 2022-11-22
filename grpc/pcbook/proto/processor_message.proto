@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// protoc --go_out=. ./grpc/pcbook/proto/processor_message.proto
+// protoc --go-grpc_out=. ./grpc/pcbook/proto/processor_message.proto
+option go_package = "./grpc/pcbook/pb";
+
+package pb;
+
+message CPU {
+  string brand = 1;
+  string name = 2;
+  uint32 numCores = 3;
+  uint32 numThreads = 4;
+  double minGhz = 5;
+  double maxGhz = 6;
+}
