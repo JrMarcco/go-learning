@@ -6,6 +6,8 @@ option go_package = "./grpc/pcbook/pb";
 
 package pb;
 
+import "grpc/pcbook/proto/memory_message.proto";
+
 message CPU {
   string brand = 1;
   string name = 2;
@@ -13,4 +15,12 @@ message CPU {
   uint32 numThreads = 4;
   double minGhz = 5;
   double maxGhz = 6;
+}
+
+message GPU {
+  string brand = 1;
+  string name = 2;
+  double minGhz = 3;
+  double maxGhz = 4;
+  Memory memory = 5;
 }
