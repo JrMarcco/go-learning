@@ -7,9 +7,9 @@ package pb;
 message Keyboard {
   enum Layout {
     Unknown = 0;
-    Qwerty = 1;
-    Qwertz = 2;
-    Azerty = 3;
+    QWERTY = 1;
+    QWERTZ = 2;
+    AZERTY = 3;
   }
 
   Layout layout = 1;
