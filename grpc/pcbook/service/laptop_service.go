@@ -3,21 +3,24 @@ package service
 import (
 	"context"
 	"github.com/google/uuid"
+	"go-learning/grpc/pcbook/db"
 	"go-learning/grpc/pcbook/pb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"log"
 )
 
-type LaptopServer struct {
-	laptopStore LaptopStore
+type LaptopService struct {
+	client *db.Client
 }
 
-func NewLaptopServer() *LaptopServer {
-	return &LaptopServer{}
+func NewLaptopServer() *LaptopService {
+	return &LaptopService{
+		client: entClient,
+	}
 }
 
-func (l *LaptopServer) CreateLaptop(ctx context.Context, req *pb.CreateLaptopReq) (*pb.CreateLaptopRsp, error) {
+func (l *LaptopService) CreateLaptop(ctx context.Context, req *pb.CreateLaptopReq) (*pb.CreateLaptopRsp, error) {
 
 	laptop := req.GetLaptop()
 	log.Printf("receive a create laptop req with id: %s", laptop.Id)
@@ -32,5 +35,16 @@ func (l *LaptopServer) CreateLaptop(ctx context.Context, req *pb.CreateLaptopReq
 		}
 		laptop.Id = uuid.String()
 	}
-	return nil, nil
+
+	lp, err := l.client.Laptop.Create().
+		SetUID(laptop.Id).
+		SetBrand(laptop.GetBrand()).
+		SetName(laptop.GetBrand()).
+		Save(ctx)
+
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "cannot save laptop: %v", err)
+	}
+
+	return &pb.CreateLaptopRsp{Id: lp.ID, Uuid: lp.UID}, nil
 }
