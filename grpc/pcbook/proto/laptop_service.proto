@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// protoc --go_out=. ./grpc/pcbook/proto/*.proto --go-grpc_out=. ./grpc/pcbook/proto/*.proto
+option go_package = "./grpc/pcbook/pb";
+
+package pb;
+
+import "grpc/pcbook/proto/laptop_message.proto";
+
+message CreateLaptopReq {
+  Laptop laptop = 1;
+}
+
+message CreateLaptopResp {
+  string id = 1;
+}
+
+service LaptopService {
+  rpc CreateLaptop(CreateLaptopReq) returns (CreateLaptopResp);
+}

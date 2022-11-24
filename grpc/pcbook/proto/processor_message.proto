@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-// protoc --go_out=. ./grpc/pcbook/proto/processor_message.proto
-// protoc --go-grpc_out=. ./grpc/pcbook/proto/processor_message.proto
 option go_package = "./grpc/pcbook/pb";
 
 package pb;

@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+// protoc --go_out=. ./grpc/pcbook/proto/*.proto
 option go_package = "./grpc/pcbook/pb";
 
 package pb;
