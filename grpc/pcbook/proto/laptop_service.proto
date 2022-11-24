@@ -11,10 +11,10 @@ message CreateLaptopReq {
   Laptop laptop = 1;
 }
 
-message CreateLaptopResp {
+message CreateLaptopRsp {
   string id = 1;
 }
 
 service LaptopService {
-  rpc CreateLaptop(CreateLaptopReq) returns (CreateLaptopResp);
+  rpc CreateLaptop(CreateLaptopReq) returns (CreateLaptopRsp);
 }

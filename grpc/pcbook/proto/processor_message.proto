@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "./grpc/pcbook/pb";
+ option go_package = "./grpc/pcbook/pb";
 
 package pb;
 

@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LaptopServiceClient interface {
-	CreateLaptop(ctx context.Context, in *CreateLaptopReq, opts ...grpc.CallOption) (*CreateLaptopResp, error)
+	CreateLaptop(ctx context.Context, in *CreateLaptopReq, opts ...grpc.CallOption) (*CreateLaptopRsp, error)
 }
 
 type laptopServiceClient struct {
@@ -33,8 +33,8 @@ func NewLaptopServiceClient(cc grpc.ClientConnInterface) LaptopServiceClient {
 	return &laptopServiceClient{cc}
 }
 
-func (c *laptopServiceClient) CreateLaptop(ctx context.Context, in *CreateLaptopReq, opts ...grpc.CallOption) (*CreateLaptopResp, error) {
-	out := new(CreateLaptopResp)
+func (c *laptopServiceClient) CreateLaptop(ctx context.Context, in *CreateLaptopReq, opts ...grpc.CallOption) (*CreateLaptopRsp, error) {
+	out := new(CreateLaptopRsp)
 	err := c.cc.Invoke(ctx, "/pb.LaptopService/CreateLaptop", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (c *laptopServiceClient) CreateLaptop(ctx context.Context, in *CreateLaptop
 // All implementations must embed UnimplementedLaptopServiceServer
 // for forward compatibility
 type LaptopServiceServer interface {
-	CreateLaptop(context.Context, *CreateLaptopReq) (*CreateLaptopResp, error)
+	CreateLaptop(context.Context, *CreateLaptopReq) (*CreateLaptopRsp, error)
 	mustEmbedUnimplementedLaptopServiceServer()
 }
 
@@ -54,7 +54,7 @@ type LaptopServiceServer interface {
 type UnimplementedLaptopServiceServer struct {
 }
 
-func (UnimplementedLaptopServiceServer) CreateLaptop(context.Context, *CreateLaptopReq) (*CreateLaptopResp, error) {
+func (UnimplementedLaptopServiceServer) CreateLaptop(context.Context, *CreateLaptopReq) (*CreateLaptopRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateLaptop not implemented")
 }
 func (UnimplementedLaptopServiceServer) mustEmbedUnimplementedLaptopServiceServer() {}
