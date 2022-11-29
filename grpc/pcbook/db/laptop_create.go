@@ -32,9 +32,9 @@ func (lc *LaptopCreate) SetBrand(s string) *LaptopCreate {
 	return lc
 }
 
-// SetName sets the "name" field.
-func (lc *LaptopCreate) SetName(s string) *LaptopCreate {
-	lc.mutation.SetName(s)
+// SetLaptopName sets the "laptop_name" field.
+func (lc *LaptopCreate) SetLaptopName(s string) *LaptopCreate {
+	lc.mutation.SetLaptopName(s)
 	return lc
 }
 
@@ -225,12 +225,12 @@ func (lc *LaptopCreate) check() error {
 			return &ValidationError{Name: "brand", err: fmt.Errorf(`db: validator failed for field "Laptop.brand": %w`, err)}
 		}
 	}
-	if _, ok := lc.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`db: missing required field "Laptop.name"`)}
+	if _, ok := lc.mutation.LaptopName(); !ok {
+		return &ValidationError{Name: "laptop_name", err: errors.New(`db: missing required field "Laptop.laptop_name"`)}
 	}
-	if v, ok := lc.mutation.Name(); ok {
-		if err := laptop.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`db: validator failed for field "Laptop.name": %w`, err)}
+	if v, ok := lc.mutation.LaptopName(); ok {
+		if err := laptop.LaptopNameValidator(v); err != nil {
+			return &ValidationError{Name: "laptop_name", err: fmt.Errorf(`db: validator failed for field "Laptop.laptop_name": %w`, err)}
 		}
 	}
 	if _, ok := lc.mutation.Weight(); !ok {
@@ -283,9 +283,9 @@ func (lc *LaptopCreate) createSpec() (*Laptop, *sqlgraph.CreateSpec) {
 		_spec.SetField(laptop.FieldBrand, field.TypeString, value)
 		_node.Brand = value
 	}
-	if value, ok := lc.mutation.Name(); ok {
-		_spec.SetField(laptop.FieldName, field.TypeString, value)
-		_node.Name = value
+	if value, ok := lc.mutation.LaptopName(); ok {
+		_spec.SetField(laptop.FieldLaptopName, field.TypeString, value)
+		_node.LaptopName = value
 	}
 	if value, ok := lc.mutation.Weight(); ok {
 		_spec.SetField(laptop.FieldWeight, field.TypeFloat64, value)

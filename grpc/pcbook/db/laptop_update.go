@@ -40,9 +40,9 @@ func (lu *LaptopUpdate) SetBrand(s string) *LaptopUpdate {
 	return lu
 }
 
-// SetName sets the "name" field.
-func (lu *LaptopUpdate) SetName(s string) *LaptopUpdate {
-	lu.mutation.SetName(s)
+// SetLaptopName sets the "laptop_name" field.
+func (lu *LaptopUpdate) SetLaptopName(s string) *LaptopUpdate {
+	lu.mutation.SetLaptopName(s)
 	return lu
 }
 
@@ -215,9 +215,9 @@ func (lu *LaptopUpdate) check() error {
 			return &ValidationError{Name: "brand", err: fmt.Errorf(`db: validator failed for field "Laptop.brand": %w`, err)}
 		}
 	}
-	if v, ok := lu.mutation.Name(); ok {
-		if err := laptop.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`db: validator failed for field "Laptop.name": %w`, err)}
+	if v, ok := lu.mutation.LaptopName(); ok {
+		if err := laptop.LaptopNameValidator(v); err != nil {
+			return &ValidationError{Name: "laptop_name", err: fmt.Errorf(`db: validator failed for field "Laptop.laptop_name": %w`, err)}
 		}
 	}
 	return nil
@@ -247,8 +247,8 @@ func (lu *LaptopUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := lu.mutation.Brand(); ok {
 		_spec.SetField(laptop.FieldBrand, field.TypeString, value)
 	}
-	if value, ok := lu.mutation.Name(); ok {
-		_spec.SetField(laptop.FieldName, field.TypeString, value)
+	if value, ok := lu.mutation.LaptopName(); ok {
+		_spec.SetField(laptop.FieldLaptopName, field.TypeString, value)
 	}
 	if value, ok := lu.mutation.Weight(); ok {
 		_spec.SetField(laptop.FieldWeight, field.TypeFloat64, value)
@@ -305,9 +305,9 @@ func (luo *LaptopUpdateOne) SetBrand(s string) *LaptopUpdateOne {
 	return luo
 }
 
-// SetName sets the "name" field.
-func (luo *LaptopUpdateOne) SetName(s string) *LaptopUpdateOne {
-	luo.mutation.SetName(s)
+// SetLaptopName sets the "laptop_name" field.
+func (luo *LaptopUpdateOne) SetLaptopName(s string) *LaptopUpdateOne {
+	luo.mutation.SetLaptopName(s)
 	return luo
 }
 
@@ -493,9 +493,9 @@ func (luo *LaptopUpdateOne) check() error {
 			return &ValidationError{Name: "brand", err: fmt.Errorf(`db: validator failed for field "Laptop.brand": %w`, err)}
 		}
 	}
-	if v, ok := luo.mutation.Name(); ok {
-		if err := laptop.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`db: validator failed for field "Laptop.name": %w`, err)}
+	if v, ok := luo.mutation.LaptopName(); ok {
+		if err := laptop.LaptopNameValidator(v); err != nil {
+			return &ValidationError{Name: "laptop_name", err: fmt.Errorf(`db: validator failed for field "Laptop.laptop_name": %w`, err)}
 		}
 	}
 	return nil
@@ -542,8 +542,8 @@ func (luo *LaptopUpdateOne) sqlSave(ctx context.Context) (_node *Laptop, err err
 	if value, ok := luo.mutation.Brand(); ok {
 		_spec.SetField(laptop.FieldBrand, field.TypeString, value)
 	}
-	if value, ok := luo.mutation.Name(); ok {
-		_spec.SetField(laptop.FieldName, field.TypeString, value)
+	if value, ok := luo.mutation.LaptopName(); ok {
+		_spec.SetField(laptop.FieldLaptopName, field.TypeString, value)
 	}
 	if value, ok := luo.mutation.Weight(); ok {
 		_spec.SetField(laptop.FieldWeight, field.TypeFloat64, value)

@@ -5,6 +5,8 @@ import (
 	"go-learning/grpc/pcbook/config"
 	"go-learning/grpc/pcbook/db"
 	"log"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var entClient *db.Client
@@ -22,4 +24,12 @@ func Setup() {
 	sqlDB.SetMaxOpenConns(dbCfg.MaxOpen)
 
 	entClient = db.NewClient(db.Driver(drv))
+}
+
+func TearDown() {
+	defer func() {
+		if entClient != nil {
+			_ = entClient.Close()
+		}
+	}()
 }

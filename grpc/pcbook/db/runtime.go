@@ -22,10 +22,10 @@ func init() {
 	laptopDescBrand := laptopFields[1].Descriptor()
 	// laptop.BrandValidator is a validator for the "brand" field. It is called by the builders before save.
 	laptop.BrandValidator = laptopDescBrand.Validators[0].(func(string) error)
-	// laptopDescName is the schema descriptor for name field.
-	laptopDescName := laptopFields[2].Descriptor()
-	// laptop.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	laptop.NameValidator = laptopDescName.Validators[0].(func(string) error)
+	// laptopDescLaptopName is the schema descriptor for laptop_name field.
+	laptopDescLaptopName := laptopFields[2].Descriptor()
+	// laptop.LaptopNameValidator is a validator for the "laptop_name" field. It is called by the builders before save.
+	laptop.LaptopNameValidator = laptopDescLaptopName.Validators[0].(func(string) error)
 	// laptopDescWeight is the schema descriptor for weight field.
 	laptopDescWeight := laptopFields[3].Descriptor()
 	// laptop.DefaultWeight holds the default value on creation for the weight field.

@@ -7,11 +7,12 @@ import (
 
 // TokenBucket 令牌桶
 type TokenBucket struct {
+	sync.Mutex
+
 	rate   int64 // 令牌放入速度
 	max    int64 // 令牌最大数量
 	last   int64 // 上一次请求发生时间
 	amount int64 // 令牌数量
-	m      sync.Mutex
 }
 
 func cur() int64 {
@@ -29,8 +30,8 @@ func New(rate, max int64) *TokenBucket {
 }
 
 func (t *TokenBucket) Pass() bool {
-	t.m.Lock()
-	defer t.m.Unlock()
+	t.Lock()
+	defer t.Unlock()
 
 	// 时间间隔
 	interval := cur() - t.last

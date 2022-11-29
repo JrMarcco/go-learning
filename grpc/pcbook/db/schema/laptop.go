@@ -16,7 +16,7 @@ func (Laptop) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("uid").NotEmpty().Unique(),
 		field.String("brand").NotEmpty(),
-		field.String("name").NotEmpty(),
+		field.String("laptop_name").NotEmpty(),
 		field.Float("weight").Default(0.00),
 		field.Uint32("price_rmb").Default(0),
 		field.Uint32("release_year").Default(0),

@@ -15,8 +15,8 @@ const (
 	FieldUID = "uid"
 	// FieldBrand holds the string denoting the brand field in the database.
 	FieldBrand = "brand"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
+	// FieldLaptopName holds the string denoting the laptop_name field in the database.
+	FieldLaptopName = "laptop_name"
 	// FieldWeight holds the string denoting the weight field in the database.
 	FieldWeight = "weight"
 	// FieldPriceRmb holds the string denoting the price_rmb field in the database.
@@ -36,7 +36,7 @@ var Columns = []string{
 	FieldID,
 	FieldUID,
 	FieldBrand,
-	FieldName,
+	FieldLaptopName,
 	FieldWeight,
 	FieldPriceRmb,
 	FieldReleaseYear,
@@ -59,8 +59,8 @@ var (
 	UIDValidator func(string) error
 	// BrandValidator is a validator for the "brand" field. It is called by the builders before save.
 	BrandValidator func(string) error
-	// NameValidator is a validator for the "name" field. It is called by the builders before save.
-	NameValidator func(string) error
+	// LaptopNameValidator is a validator for the "laptop_name" field. It is called by the builders before save.
+	LaptopNameValidator func(string) error
 	// DefaultWeight holds the default value on creation for the "weight" field.
 	DefaultWeight float64
 	// DefaultPriceRmb holds the default value on creation for the "price_rmb" field.

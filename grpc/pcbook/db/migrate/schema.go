@@ -13,7 +13,7 @@ var (
 		{Name: "id", Type: field.TypeUint64, Increment: true},
 		{Name: "uid", Type: field.TypeString, Unique: true},
 		{Name: "brand", Type: field.TypeString},
-		{Name: "name", Type: field.TypeString},
+		{Name: "laptop_name", Type: field.TypeString},
 		{Name: "weight", Type: field.TypeFloat64, Default: 0},
 		{Name: "price_rmb", Type: field.TypeUint32, Default: 0},
 		{Name: "release_year", Type: field.TypeUint32, Default: 0},

@@ -40,7 +40,7 @@ func load(path string) (config Config, err error) {
 var cfg Config
 
 func init() {
-	config, err := load("..")
+	config, err := load("../")
 	if err != nil {
 		log.Fatalln(err)
 	}

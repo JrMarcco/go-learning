@@ -20,8 +20,8 @@ type Laptop struct {
 	UID string `json:"uid,omitempty"`
 	// Brand holds the value of the "brand" field.
 	Brand string `json:"brand,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
+	// LaptopName holds the value of the "laptop_name" field.
+	LaptopName string `json:"laptop_name,omitempty"`
 	// Weight holds the value of the "weight" field.
 	Weight float64 `json:"weight,omitempty"`
 	// PriceRmb holds the value of the "price_rmb" field.
@@ -43,7 +43,7 @@ func (*Laptop) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case laptop.FieldID, laptop.FieldPriceRmb, laptop.FieldReleaseYear:
 			values[i] = new(sql.NullInt64)
-		case laptop.FieldUID, laptop.FieldBrand, laptop.FieldName:
+		case laptop.FieldUID, laptop.FieldBrand, laptop.FieldLaptopName:
 			values[i] = new(sql.NullString)
 		case laptop.FieldCreatedAt, laptop.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -80,11 +80,11 @@ func (l *Laptop) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				l.Brand = value.String
 			}
-		case laptop.FieldName:
+		case laptop.FieldLaptopName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field name", values[i])
+				return fmt.Errorf("unexpected type %T for field laptop_name", values[i])
 			} else if value.Valid {
-				l.Name = value.String
+				l.LaptopName = value.String
 			}
 		case laptop.FieldWeight:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
@@ -150,8 +150,8 @@ func (l *Laptop) String() string {
 	builder.WriteString("brand=")
 	builder.WriteString(l.Brand)
 	builder.WriteString(", ")
-	builder.WriteString("name=")
-	builder.WriteString(l.Name)
+	builder.WriteString("laptop_name=")
+	builder.WriteString(l.LaptopName)
 	builder.WriteString(", ")
 	builder.WriteString("weight=")
 	builder.WriteString(fmt.Sprintf("%v", l.Weight))

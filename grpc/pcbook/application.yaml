@@ -1,5 +1,5 @@
 db:
   driver: "mysql"
-  source: "root:@tcp(127.0.0.1:3306)/simple_bank?parseTime=true&loc=Local"
+  source: "root:@tcp(127.0.0.1:3306)/pcbook?parseTime=true&loc=Local"
   maxIdle: 5
   maxOpen: 10

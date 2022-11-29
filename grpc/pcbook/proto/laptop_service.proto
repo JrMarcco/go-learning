@@ -13,7 +13,7 @@ message CreateLaptopReq {
 
 message CreateLaptopRsp {
   uint64 id = 1;
-  string uuid = 2;
+  string uid = 2;
 }
 
 service LaptopService {

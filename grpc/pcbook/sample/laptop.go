@@ -121,7 +121,7 @@ func NewLaptop() *pb.Laptop {
 	name := randomLaptopName(brand)
 
 	laptop := &pb.Laptop{
-		Id:       randomID(),
+		Uid:      randomID(),
 		Brand:    brand,
 		Name:     name,
 		Cpu:      NewCPU(),
