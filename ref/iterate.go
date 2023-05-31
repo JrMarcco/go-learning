@@ -33,10 +33,10 @@ func IterateMap(in any) ([]any, []any, error) {
 		return nil, nil, InvalidTypErr
 	}
 
-	len := val.Len()
+	valLen := val.Len()
 
-	keys := make([]any, 0, len)
-	vals := make([]any, 0, len)
+	keys := make([]any, 0, valLen)
+	vals := make([]any, 0, valLen)
 
 	it := val.MapRange()
 	for it.Next() {
