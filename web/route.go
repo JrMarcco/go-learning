@@ -36,9 +36,10 @@ func (r *router) addRoute(method string, path string, handleFunc HandleFunc) {
 			panic(fmt.Sprintf("[route] path '%s' has already registered", path))
 		}
 		root.handleFunc = handleFunc
+		return
 	}
 
-	segs := strings.Split(path[1:], "/")
+	segs := strings.Split(strings.Trim(path, "/"), "/")
 	for _, seg := range segs {
 		root = root.createChild(seg)
 	}
@@ -84,15 +85,18 @@ type node struct {
 func (n *node) createChild(path string) *node {
 
 	if n.children == nil {
-		n.children = make(map[string]*node)
+		n.children = map[string]*node{}
 	}
 
 	if child, ok := n.children[path]; ok {
 		return child
 	}
 
-	n.children[path] = n
-	return n
+	child := &node{
+		path: path,
+	}
+	n.children[path] = child
+	return child
 }
 
 func (n *node) findChild(path string) (*node, bool) {
