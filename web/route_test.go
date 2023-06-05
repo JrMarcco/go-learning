@@ -133,3 +133,36 @@ func (n *node) equal(target *node) (bool, string) {
 
 	return true, ""
 }
+
+func TestRouter_AddRoutePanic(t *testing.T) {
+	r := newRouter()
+	mockHandleFunc := func(ctx *Context) {}
+
+	assert.PanicsWithValue(t, "[route] empty path", func() {
+		r.addRoute(http.MethodGet, "", mockHandleFunc)
+	})
+
+	assert.PanicsWithValue(t, "[route] path not start with '/'", func() {
+		r.addRoute(http.MethodGet, "home", mockHandleFunc)
+	})
+
+	registered := "/"
+	r.addRoute(http.MethodGet, registered, mockHandleFunc)
+	assert.PanicsWithValue(
+		t,
+		fmt.Sprintf(fmt.Sprintf("[route] path '%s' has already registered", registered)),
+		func() {
+			r.addRoute(http.MethodGet, registered, mockHandleFunc)
+		},
+	)
+
+	registered = "/user/edit"
+	r.addRoute(http.MethodPost, registered, mockHandleFunc)
+	assert.PanicsWithValue(
+		t,
+		fmt.Sprintf(fmt.Sprintf("[route] path '%s' has already registered", registered)),
+		func() {
+			r.addRoute(http.MethodPost, registered, mockHandleFunc)
+		},
+	)
+}
