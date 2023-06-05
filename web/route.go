@@ -27,7 +27,7 @@ func (r *router) addRoute(method string, path string, handleFunc HandleFunc) {
 
 	root, ok := r.methodTrees[method]
 	if !ok {
-		root = &node{}
+		root = &node{path: "/"}
 		r.methodTrees[method] = root
 	}
 
