@@ -32,6 +32,18 @@ func TestRouter_AddRoute(t *testing.T) {
 		}, {
 			method: http.MethodPost,
 			path:   "/user/edit",
+		}, {
+			method: http.MethodGet,
+			path:   "/*",
+		}, {
+			method: http.MethodGet,
+			path:   "/*/*",
+		}, {
+			method: http.MethodGet,
+			path:   "/*/wild",
+		}, {
+			method: http.MethodGet,
+			path:   "/*/wild/*",
 		},
 	}
 
@@ -65,6 +77,24 @@ func TestRouter_AddRoute(t *testing.T) {
 								handleFunc: mockHandleFunc,
 							},
 						},
+					},
+				},
+				wildcard: &node{
+					path:       "*",
+					handleFunc: mockHandleFunc,
+					children: map[string]*node{
+						"wild": {
+							path:       "wild",
+							handleFunc: mockHandleFunc,
+							wildcard: &node{
+								path:       "*",
+								handleFunc: mockHandleFunc,
+							},
+						},
+					},
+					wildcard: &node{
+						path:       "*",
+						handleFunc: mockHandleFunc,
 					},
 				},
 			},
@@ -113,6 +143,10 @@ func (n *node) equal(target *node) (bool, string) {
 
 	if len(n.children) != len(target.children) {
 		return false, "children length unmatched"
+	}
+
+	if n.wildcard != nil {
+		return n.wildcard.equal(target.wildcard)
 	}
 
 	if reflect.ValueOf(n.handleFunc) != reflect.ValueOf(target.handleFunc) {
@@ -177,6 +211,12 @@ func TestRouter_findRoute(t *testing.T) {
 	r.addRoute(http.MethodGet, "/user/list", mockHandleFunc)
 	r.addRoute(http.MethodPost, "/user/edit", mockHandleFunc)
 
+	r.addRoute(http.MethodGet, "/*", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/*/*", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/*/wild", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/pic/*", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/*/inner/*", mockHandleFunc)
+
 	tcs := []struct {
 		name           string
 		method         string
@@ -214,6 +254,42 @@ func TestRouter_findRoute(t *testing.T) {
 			path:           "/user",
 			wantRes:        false,
 			wantHandleFunc: nil,
+		}, {
+			name:           "indexWildcard",
+			method:         http.MethodGet,
+			path:           "/demo",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
+		}, {
+			name:           "doubleWildcard",
+			method:         http.MethodGet,
+			path:           "/a/b",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
+		}, {
+			name:           "wildcardPrefix",
+			method:         http.MethodGet,
+			path:           "/demo/wild",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
+		}, {
+			name:           "wildcardNotFound",
+			method:         http.MethodGet,
+			path:           "/a/wild/b",
+			wantRes:        false,
+			wantHandleFunc: nil,
+		}, {
+			name:           "wildcardSuffix",
+			method:         http.MethodGet,
+			path:           "/pic/abc",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
+		}, {
+			name:           "headAndTailWildcard",
+			method:         http.MethodGet,
+			path:           "/a/inner/b",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
 		},
 	}
 

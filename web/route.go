@@ -79,10 +79,21 @@ func (r *router) findRoute(method string, path string) (HandleFunc, bool) {
 type node struct {
 	path       string
 	children   map[string]*node
+	wildcard   *node
 	handleFunc HandleFunc
 }
 
 func (n *node) createChild(path string) *node {
+
+	if path == "*" {
+		if n.wildcard == nil {
+			n.wildcard = &node{
+				path: path,
+			}
+		}
+
+		return n.wildcard
+	}
 
 	if n.children == nil {
 		n.children = map[string]*node{}
@@ -92,22 +103,21 @@ func (n *node) createChild(path string) *node {
 		return child
 	}
 
-	child := &node{
+	n.children[path] = &node{
 		path: path,
 	}
-	n.children[path] = child
-	return child
+	return n.children[path]
 }
 
 func (n *node) findChild(path string) (*node, bool) {
 
 	if n.children == nil {
-		return nil, false
+		return n.wildcard, n.wildcard != nil
 	}
 
 	if child, ok := n.children[path]; ok {
 		return child, true
 	}
 
-	return nil, false
+	return n.wildcard, n.wildcard != nil
 }
