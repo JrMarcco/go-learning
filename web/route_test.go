@@ -333,9 +333,17 @@ func TestRouter_findRoute(t *testing.T) {
 				handleFunc: mockHandleFunc,
 			},
 		}, {
-			name:   "headAndTailWildcard",
+			name:   "headAndTailWildcard1",
 			method: http.MethodGet,
 			path:   "/a/inner/b",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
+		}, {
+			name:   "headAndTailWildcard2",
+			method: http.MethodGet,
+			path:   "/a/inner/b/c/d",
 			wantRes: matchInfo{
 				matched:    true,
 				handleFunc: mockHandleFunc,

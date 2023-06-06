@@ -72,18 +72,28 @@ func (r *router) findRoute(method string, path string) matchInfo {
 
 	segs := strings.Split(strings.Trim(path, "/"), "/")
 	for _, seg := range segs {
-		root, ok = root.findChild(seg)
+		child, ok := root.findChild(seg)
 		if !ok {
+			if root.typ == nodeTypeWildcard {
+				return matchInfo{
+					matched:    true,
+					handleFunc: root.handleFunc,
+					params:     params,
+				}
+			}
 			return matchInfo{matched: false}
 		}
 
-		if root.path[0] == ':' {
+		// 获取参数路径上的参数
+		if child.path[0] == ':' {
 			if params == nil {
 				params = make(map[string]string, 2)
 			}
 
-			params[root.path[1:]] = seg
+			params[child.path[1:]] = seg
 		}
+
+		root = child
 	}
 
 	return matchInfo{
@@ -93,7 +103,16 @@ func (r *router) findRoute(method string, path string) matchInfo {
 	}
 }
 
+const (
+	nodeTypeStatic = iota
+	nodeTypeWildcard
+	nodeTypeParam
+)
+
+type nodeType int
+
 type node struct {
+	typ          nodeType
 	path         string
 	children     map[string]*node
 	wildcardNode *node
@@ -102,29 +121,12 @@ type node struct {
 }
 
 func (n *node) createChild(path string) *node {
-
-	if path[0] == ':' {
-		if n.wildcardNode != nil {
-			panic("[route] can not register wildcardNode and paramNode at same time")
-		}
-		n.paramNode = &node{
-			path: path,
-		}
-		return n.paramNode
+	if path == "*" {
+		return n.createWildCardNode(path)
 	}
 
-	if path == "*" {
-		if n.wildcardNode == nil {
-			if n.paramNode != nil {
-				panic("[route] can not register wildcardNode and paramNode at same time")
-			}
-
-			n.wildcardNode = &node{
-				path: path,
-			}
-		}
-
-		return n.wildcardNode
+	if path[0] == ':' {
+		return n.createParamNode(path)
 	}
 
 	if n.children == nil {
@@ -136,9 +138,36 @@ func (n *node) createChild(path string) *node {
 	}
 
 	n.children[path] = &node{
+		typ:  nodeTypeStatic,
 		path: path,
 	}
 	return n.children[path]
+}
+
+func (n *node) createWildCardNode(path string) *node {
+	if n.wildcardNode == nil {
+		if n.paramNode != nil {
+			panic("[route] can not register wildcardNode and paramNode at same time")
+		}
+
+		n.wildcardNode = &node{
+			typ:  nodeTypeWildcard,
+			path: path,
+		}
+	}
+
+	return n.wildcardNode
+}
+
+func (n *node) createParamNode(path string) *node {
+	if n.wildcardNode != nil {
+		panic("[route] can not register wildcardNode and paramNode at same time")
+	}
+	n.paramNode = &node{
+		typ:  nodeTypeParam,
+		path: path,
+	}
+	return n.paramNode
 }
 
 func (n *node) findChild(path string) (*node, bool) {
