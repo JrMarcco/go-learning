@@ -80,13 +80,28 @@ type node struct {
 	path       string
 	children   map[string]*node
 	wildcard   *node
+	parameter  *node
 	handleFunc HandleFunc
 }
 
 func (n *node) createChild(path string) *node {
 
+	if path[0] == ':' {
+		if n.wildcard != nil {
+			panic("[route] can not register wildcard and parameter at same time")
+		}
+		n.parameter = &node{
+			path: path,
+		}
+		return n.parameter
+	}
+
 	if path == "*" {
 		if n.wildcard == nil {
+			if n.parameter != nil {
+				panic("[route] can not register wildcard and parameter at same time")
+			}
+
 			n.wildcard = &node{
 				path: path,
 			}
@@ -112,12 +127,19 @@ func (n *node) createChild(path string) *node {
 func (n *node) findChild(path string) (*node, bool) {
 
 	if n.children == nil {
-		return n.wildcard, n.wildcard != nil
+		return n.findSpecNode(path)
 	}
 
 	if child, ok := n.children[path]; ok {
 		return child, true
 	}
 
+	return n.findSpecNode(path)
+}
+
+func (n *node) findSpecNode(path string) (*node, bool) {
+	if n.parameter != nil {
+		return n.parameter, true
+	}
 	return n.wildcard, n.wildcard != nil
 }

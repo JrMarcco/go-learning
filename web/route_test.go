@@ -44,6 +44,9 @@ func TestRouter_AddRoute(t *testing.T) {
 		}, {
 			method: http.MethodGet,
 			path:   "/*/wild/*",
+		}, {
+			method: http.MethodGet,
+			path:   "/order/:id",
 		},
 	}
 
@@ -76,6 +79,13 @@ func TestRouter_AddRoute(t *testing.T) {
 								path:       "list",
 								handleFunc: mockHandleFunc,
 							},
+						},
+					},
+					"order": {
+						path: "order",
+						parameter: &node{
+							path:       ":id",
+							handleFunc: mockHandleFunc,
 						},
 					},
 				},
@@ -199,6 +209,24 @@ func TestRouter_AddRoutePanic(t *testing.T) {
 			r.addRoute(http.MethodPost, registered, mockHandleFunc)
 		},
 	)
+
+	r.addRoute(http.MethodGet, "/wildcard/*", mockHandleFunc)
+	assert.PanicsWithValue(
+		t,
+		"[route] can not register wildcard and parameter at same time",
+		func() {
+			r.addRoute(http.MethodGet, "/wildcard/:id", mockHandleFunc)
+		},
+	)
+
+	r.addRoute(http.MethodGet, "/parameter/:id", mockHandleFunc)
+	assert.PanicsWithValue(
+		t,
+		"[route] can not register wildcard and parameter at same time",
+		func() {
+			r.addRoute(http.MethodGet, "/parameter/*", mockHandleFunc)
+		},
+	)
 }
 
 func TestRouter_findRoute(t *testing.T) {
@@ -216,6 +244,8 @@ func TestRouter_findRoute(t *testing.T) {
 	r.addRoute(http.MethodGet, "/*/wild", mockHandleFunc)
 	r.addRoute(http.MethodGet, "/pic/*", mockHandleFunc)
 	r.addRoute(http.MethodGet, "/*/inner/*", mockHandleFunc)
+
+	r.addRoute(http.MethodGet, "/order/:id", mockHandleFunc)
 
 	tcs := []struct {
 		name           string
@@ -288,6 +318,12 @@ func TestRouter_findRoute(t *testing.T) {
 			name:           "headAndTailWildcard",
 			method:         http.MethodGet,
 			path:           "/a/inner/b",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
+		}, {
+			name:           "orderParam",
+			method:         http.MethodGet,
+			path:           "/order/Z123456",
 			wantRes:        true,
 			wantHandleFunc: mockHandleFunc,
 		},
