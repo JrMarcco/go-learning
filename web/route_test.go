@@ -209,7 +209,7 @@ func TestRouter_findRoute(t *testing.T) {
 			wantRes:        true,
 			wantHandleFunc: mockHandleFunc,
 		}, {
-			name:           "user",
+			name:           "userNotFound",
 			method:         http.MethodPost,
 			path:           "/user",
 			wantRes:        false,
