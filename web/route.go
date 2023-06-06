@@ -51,63 +51,80 @@ func (r *router) addRoute(method string, path string, handleFunc HandleFunc) {
 
 }
 
-func (r *router) findRoute(method string, path string) (HandleFunc, bool) {
+func (r *router) findRoute(method string, path string) matchInfo {
 
 	root, ok := r.methodTrees[method]
 	if !ok {
-		return nil, false
+		return matchInfo{matched: false}
 	}
 
 	if path == "/" {
 		if root.handleFunc == nil {
-			return nil, false
+			return matchInfo{matched: false}
 		}
-		return root.handleFunc, true
+		return matchInfo{
+			matched:    true,
+			handleFunc: root.handleFunc,
+		}
 	}
+
+	var params map[string]string
 
 	segs := strings.Split(strings.Trim(path, "/"), "/")
 	for _, seg := range segs {
 		root, ok = root.findChild(seg)
 		if !ok {
-			return nil, false
+			return matchInfo{matched: false}
+		}
+
+		if root.path[0] == ':' {
+			if params == nil {
+				params = make(map[string]string, 2)
+			}
+
+			params[root.path[1:]] = seg
 		}
 	}
 
-	return root.handleFunc, root.handleFunc != nil
+	return matchInfo{
+		matched:    root.handleFunc != nil,
+		handleFunc: root.handleFunc,
+		params:     params,
+	}
 }
 
 type node struct {
-	path       string
-	children   map[string]*node
-	wildcard   *node
-	parameter  *node
-	handleFunc HandleFunc
+	path         string
+	children     map[string]*node
+	wildcardNode *node
+	paramNode    *node
+	handleFunc   HandleFunc
 }
 
 func (n *node) createChild(path string) *node {
 
 	if path[0] == ':' {
-		if n.wildcard != nil {
-			panic("[route] can not register wildcard and parameter at same time")
+		if n.wildcardNode != nil {
+			panic("[route] can not register wildcardNode and paramNode at same time")
 		}
-		n.parameter = &node{
+		n.paramNode = &node{
 			path: path,
 		}
-		return n.parameter
+		return n.paramNode
 	}
 
 	if path == "*" {
-		if n.wildcard == nil {
-			if n.parameter != nil {
-				panic("[route] can not register wildcard and parameter at same time")
+		if n.wildcardNode == nil {
+			if n.paramNode != nil {
+				panic("[route] can not register wildcardNode and paramNode at same time")
 			}
 
-			n.wildcard = &node{
+			n.wildcardNode = &node{
 				path: path,
 			}
 		}
 
-		return n.wildcard
+		return n.wildcardNode
 	}
 
 	if n.children == nil {
@@ -127,19 +144,25 @@ func (n *node) createChild(path string) *node {
 func (n *node) findChild(path string) (*node, bool) {
 
 	if n.children == nil {
-		return n.findSpecNode(path)
+		return n.findSpecNode()
 	}
 
 	if child, ok := n.children[path]; ok {
 		return child, true
 	}
 
-	return n.findSpecNode(path)
+	return n.findSpecNode()
 }
 
-func (n *node) findSpecNode(path string) (*node, bool) {
-	if n.parameter != nil {
-		return n.parameter, true
+func (n *node) findSpecNode() (*node, bool) {
+	if n.paramNode != nil {
+		return n.paramNode, true
 	}
-	return n.wildcard, n.wildcard != nil
+	return n.wildcardNode, n.wildcardNode != nil
+}
+
+type matchInfo struct {
+	matched    bool
+	handleFunc HandleFunc
+	params     map[string]string
 }

@@ -63,8 +63,9 @@ func (h *HttpServer) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {
 
 func (h *HttpServer) serve(ctx *Context) {
 
-	if hf, ok := h.findRoute(ctx.req.Method, ctx.req.URL.Path); ok {
-		hf(ctx)
+	mi := h.findRoute(ctx.req.Method, ctx.req.URL.Path)
+	if mi.matched {
+		mi.handleFunc(ctx)
 		return
 	}
 

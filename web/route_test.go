@@ -83,26 +83,26 @@ func TestRouter_AddRoute(t *testing.T) {
 					},
 					"order": {
 						path: "order",
-						parameter: &node{
+						paramNode: &node{
 							path:       ":id",
 							handleFunc: mockHandleFunc,
 						},
 					},
 				},
-				wildcard: &node{
+				wildcardNode: &node{
 					path:       "*",
 					handleFunc: mockHandleFunc,
 					children: map[string]*node{
 						"wild": {
 							path:       "wild",
 							handleFunc: mockHandleFunc,
-							wildcard: &node{
+							wildcardNode: &node{
 								path:       "*",
 								handleFunc: mockHandleFunc,
 							},
 						},
 					},
-					wildcard: &node{
+					wildcardNode: &node{
 						path:       "*",
 						handleFunc: mockHandleFunc,
 					},
@@ -155,8 +155,8 @@ func (n *node) equal(target *node) (bool, string) {
 		return false, "children length unmatched"
 	}
 
-	if n.wildcard != nil {
-		return n.wildcard.equal(target.wildcard)
+	if n.wildcardNode != nil {
+		return n.wildcardNode.equal(target.wildcardNode)
 	}
 
 	if reflect.ValueOf(n.handleFunc) != reflect.ValueOf(target.handleFunc) {
@@ -210,21 +210,21 @@ func TestRouter_AddRoutePanic(t *testing.T) {
 		},
 	)
 
-	r.addRoute(http.MethodGet, "/wildcard/*", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/wildcardNode/*", mockHandleFunc)
 	assert.PanicsWithValue(
 		t,
-		"[route] can not register wildcard and parameter at same time",
+		"[route] can not register wildcardNode and paramNode at same time",
 		func() {
-			r.addRoute(http.MethodGet, "/wildcard/:id", mockHandleFunc)
+			r.addRoute(http.MethodGet, "/wildcardNode/:id", mockHandleFunc)
 		},
 	)
 
-	r.addRoute(http.MethodGet, "/parameter/:id", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/paramNode/:id", mockHandleFunc)
 	assert.PanicsWithValue(
 		t,
-		"[route] can not register wildcard and parameter at same time",
+		"[route] can not register wildcardNode and paramNode at same time",
 		func() {
-			r.addRoute(http.MethodGet, "/parameter/*", mockHandleFunc)
+			r.addRoute(http.MethodGet, "/paramNode/*", mockHandleFunc)
 		},
 	)
 }
@@ -246,100 +246,138 @@ func TestRouter_findRoute(t *testing.T) {
 	r.addRoute(http.MethodGet, "/*/inner/*", mockHandleFunc)
 
 	r.addRoute(http.MethodGet, "/order/:id", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/multi/:a/:b", mockHandleFunc)
 
 	tcs := []struct {
-		name           string
-		method         string
-		path           string
-		wantRes        bool
-		wantHandleFunc HandleFunc
+		name    string
+		method  string
+		path    string
+		wantRes matchInfo
 	}{
 		{
-			name:           "index",
-			method:         http.MethodGet,
-			path:           "/",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "index",
+			method: http.MethodGet,
+			path:   "/",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
 		}, {
-			name:           "userGet",
-			method:         http.MethodGet,
-			path:           "/user/get",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "userGet",
+			method: http.MethodGet,
+			path:   "/user/get",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
 		}, {
-			name:           "userList",
-			method:         http.MethodGet,
-			path:           "/user/get",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "userList",
+			method: http.MethodGet,
+			path:   "/user/get",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
 		}, {
-			name:           "userEdit",
-			method:         http.MethodPost,
-			path:           "/user/edit",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "userEdit",
+			method: http.MethodPost,
+			path:   "/user/edit",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
 		}, {
-			name:           "userNotFound",
-			method:         http.MethodPost,
-			path:           "/user",
-			wantRes:        false,
-			wantHandleFunc: nil,
+			name:   "userNotFound",
+			method: http.MethodPost,
+			path:   "/user",
+			wantRes: matchInfo{
+				matched: false,
+			},
 		}, {
-			name:           "indexWildcard",
-			method:         http.MethodGet,
-			path:           "/demo",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "indexWildcard",
+			method: http.MethodGet,
+			path:   "/demo",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
 		}, {
-			name:           "doubleWildcard",
-			method:         http.MethodGet,
-			path:           "/a/b",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "doubleWildcard",
+			method: http.MethodGet,
+			path:   "/a/b",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
 		}, {
-			name:           "wildcardPrefix",
-			method:         http.MethodGet,
-			path:           "/demo/wild",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "wildcardPrefix",
+			method: http.MethodGet,
+			path:   "/demo/wild",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
 		}, {
-			name:           "wildcardNotFound",
-			method:         http.MethodGet,
-			path:           "/a/wild/b",
-			wantRes:        false,
-			wantHandleFunc: nil,
+			name:   "wildcardNotFound",
+			method: http.MethodGet,
+			path:   "/a/wild/b",
+			wantRes: matchInfo{
+				matched: false,
+			},
 		}, {
-			name:           "wildcardSuffix",
-			method:         http.MethodGet,
-			path:           "/pic/abc",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "wildcardSuffix",
+			method: http.MethodGet,
+			path:   "/pic/abc",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
 		}, {
-			name:           "headAndTailWildcard",
-			method:         http.MethodGet,
-			path:           "/a/inner/b",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "headAndTailWildcard",
+			method: http.MethodGet,
+			path:   "/a/inner/b",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+			},
 		}, {
-			name:           "orderParam",
-			method:         http.MethodGet,
-			path:           "/order/Z123456",
-			wantRes:        true,
-			wantHandleFunc: mockHandleFunc,
+			name:   "orderParam",
+			method: http.MethodGet,
+			path:   "/order/Z123456",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+				params: map[string]string{
+					"id": "Z123456",
+				},
+			},
+		}, {
+			name:   "multiParam",
+			method: http.MethodGet,
+			path:   "/multi/xxx/123",
+			wantRes: matchInfo{
+				matched:    true,
+				handleFunc: mockHandleFunc,
+				params: map[string]string{
+					"a": "xxx",
+					"b": "123",
+				},
+			},
 		},
 	}
 
 	for _, tc := range tcs {
 		t.Run(tc.name, func(t *testing.T) {
-			hf, res := r.findRoute(tc.method, tc.path)
+			mi := r.findRoute(tc.method, tc.path)
 
-			assert.Equal(t, tc.wantRes, res)
+			assert.Equal(t, tc.wantRes.matched, mi.matched)
+			assert.Equal(t, tc.wantRes.params, mi.params)
 
-			if !res {
-				assert.Nil(t, hf)
+			if !mi.matched {
+				assert.Nil(t, mi.handleFunc)
 				return
 			}
-			assert.True(t, reflect.ValueOf(hf) == reflect.ValueOf(tc.wantHandleFunc))
+			assert.True(t, reflect.ValueOf(mi.handleFunc) == reflect.ValueOf(tc.wantRes.handleFunc))
 		})
 	}
 }
