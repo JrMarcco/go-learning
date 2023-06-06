@@ -166,3 +166,68 @@ func TestRouter_AddRoutePanic(t *testing.T) {
 		},
 	)
 }
+
+func TestRouter_findRoute(t *testing.T) {
+
+	r := newRouter()
+	mockHandleFunc := func(ctx *Context) {}
+
+	r.addRoute(http.MethodGet, "/", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/user/get", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/user/list", mockHandleFunc)
+	r.addRoute(http.MethodPost, "/user/edit", mockHandleFunc)
+
+	tcs := []struct {
+		name           string
+		method         string
+		path           string
+		wantRes        bool
+		wantHandleFunc HandleFunc
+	}{
+		{
+			name:           "index",
+			method:         http.MethodGet,
+			path:           "/",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
+		}, {
+			name:           "userGet",
+			method:         http.MethodGet,
+			path:           "/user/get",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
+		}, {
+			name:           "userList",
+			method:         http.MethodGet,
+			path:           "/user/get",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
+		}, {
+			name:           "userEdit",
+			method:         http.MethodPost,
+			path:           "/user/edit",
+			wantRes:        true,
+			wantHandleFunc: mockHandleFunc,
+		}, {
+			name:           "user",
+			method:         http.MethodPost,
+			path:           "/user",
+			wantRes:        false,
+			wantHandleFunc: nil,
+		},
+	}
+
+	for _, tc := range tcs {
+		t.Run(tc.name, func(t *testing.T) {
+			hf, res := r.findRoute(tc.method, tc.path)
+
+			assert.Equal(t, tc.wantRes, res)
+
+			if !res {
+				assert.Nil(t, hf)
+				return
+			}
+			assert.True(t, reflect.ValueOf(hf) == reflect.ValueOf(tc.wantHandleFunc))
+		})
+	}
+}

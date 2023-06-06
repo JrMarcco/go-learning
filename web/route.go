@@ -68,12 +68,12 @@ func (r *router) findRoute(method string, path string) (HandleFunc, bool) {
 	segs := strings.Split(strings.Trim(path, "/"), "/")
 	for _, seg := range segs {
 		root, ok = root.findChild(seg)
-		if !ok || root.handleFunc == nil {
+		if !ok {
 			return nil, false
 		}
 	}
 
-	return root.handleFunc, true
+	return root.handleFunc, root.handleFunc != nil
 }
 
 type node struct {
