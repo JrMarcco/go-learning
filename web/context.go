@@ -39,12 +39,10 @@ func (c *Context) PathVal(key string) StringVal {
 	if val, ok := c.pathParams[key]; ok {
 		return StringVal{
 			val: val,
-			err: nil,
 		}
 	}
 
 	return StringVal{
-		val: "",
 		err: errors.New("[ctx] path key not exist"),
 	}
 }
@@ -57,12 +55,10 @@ func (c *Context) QueryVal(key string) StringVal {
 	if vals, ok := c.queryVals[key]; ok {
 		return StringVal{
 			val: vals[0],
-			err: nil,
 		}
 	}
 
 	return StringVal{
-		val: "",
 		err: errors.New("[ctx] query key not exist"),
 	}
 }
@@ -70,14 +66,12 @@ func (c *Context) QueryVal(key string) StringVal {
 func (c *Context) FormVal(key string) StringVal {
 	if err := c.req.ParseForm(); err != nil {
 		return StringVal{
-			val: "",
 			err: err,
 		}
 	}
 
 	return StringVal{
 		val: c.req.FormValue(key),
-		err: nil,
 	}
 }
 
