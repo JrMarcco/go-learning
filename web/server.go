@@ -65,6 +65,7 @@ func (h *HttpServer) serve(ctx *Context) {
 
 	mi := h.findRoute(ctx.req.Method, ctx.req.URL.Path)
 	if mi.matched {
+		ctx.pathParams = mi.params
 		mi.handleFunc(ctx)
 		return
 	}
