@@ -9,8 +9,11 @@ import (
 )
 
 type Context struct {
-	req *http.Request
-	rsp http.ResponseWriter
+	Req *http.Request
+	Rsp http.ResponseWriter
+
+	RspStatusCode int
+	RspData       []byte
 
 	pathParams map[string]string
 	queryVals  url.Values
@@ -23,8 +26,8 @@ func (c *Context) RspJson(statusCode int, val any) error {
 		return err
 	}
 
-	c.rsp.WriteHeader(statusCode)
-	_, err = c.rsp.Write(bs)
+	c.RspStatusCode = statusCode
+	c.RspData = bs
 
 	return err
 }
@@ -47,7 +50,7 @@ func (c *Context) PathVal(key string) StringVal {
 
 func (c *Context) QueryVal(key string) StringVal {
 	if c.queryVals == nil {
-		c.queryVals = c.req.URL.Query()
+		c.queryVals = c.Req.URL.Query()
 	}
 
 	if vals, ok := c.queryVals[key]; ok {
@@ -62,23 +65,23 @@ func (c *Context) QueryVal(key string) StringVal {
 }
 
 func (c *Context) FormVal(key string) StringVal {
-	if err := c.req.ParseForm(); err != nil {
+	if err := c.Req.ParseForm(); err != nil {
 		return StringVal{
 			err: err,
 		}
 	}
 
 	return StringVal{
-		val: c.req.FormValue(key),
+		val: c.Req.FormValue(key),
 	}
 }
 
 func (c *Context) BindJson(val any) error {
-	if c.req.Body == nil {
+	if c.Req.Body == nil {
 		return errors.New("[ctx] request body is nil")
 	}
 
-	decoder := json.NewDecoder(c.req.Body)
+	decoder := json.NewDecoder(c.Req.Body)
 	return decoder.Decode(val)
 }
 

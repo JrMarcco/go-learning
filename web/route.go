@@ -15,7 +15,7 @@ func newRouter() *router {
 	}
 }
 
-func (r *router) addRoute(method string, path string, handleFunc HandleFunc) {
+func (r *router) addRoute(method string, path string, handleFunc HandleFunc, middlewares ...Middleware) {
 
 	if path == "" {
 		panic("[route] empty path")
@@ -36,6 +36,7 @@ func (r *router) addRoute(method string, path string, handleFunc HandleFunc) {
 			panic(fmt.Sprintf("[route] path '%s' has already registered", path))
 		}
 		root.handleFunc = handleFunc
+		root.middlewares = middlewares
 		return
 	}
 
@@ -48,7 +49,7 @@ func (r *router) addRoute(method string, path string, handleFunc HandleFunc) {
 		panic(fmt.Sprintf("[route] path '%s' has already registered", path))
 	}
 	root.handleFunc = handleFunc
-
+	root.middlewares = middlewares
 }
 
 func (r *router) findRoute(method string, path string) matchInfo {
@@ -97,9 +98,10 @@ func (r *router) findRoute(method string, path string) matchInfo {
 	}
 
 	return matchInfo{
-		matched:    root.handleFunc != nil,
-		handleFunc: root.handleFunc,
-		params:     params,
+		matched:     root.handleFunc != nil,
+		handleFunc:  root.handleFunc,
+		middleWares: root.middlewares,
+		params:      params,
 	}
 }
 
@@ -118,6 +120,7 @@ type node struct {
 	wildcardNode *node
 	paramNode    *node
 	handleFunc   HandleFunc
+	middlewares  MiddlewareChain
 }
 
 func (n *node) createChild(path string) *node {
@@ -191,7 +194,8 @@ func (n *node) findSpecNode() (*node, bool) {
 }
 
 type matchInfo struct {
-	matched    bool
-	handleFunc HandleFunc
-	params     map[string]string
+	matched     bool
+	handleFunc  HandleFunc
+	middleWares MiddlewareChain
+	params      map[string]string
 }
