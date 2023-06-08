@@ -186,7 +186,7 @@ func TestRouter_AddRoutePanic(t *testing.T) {
 		r.addRoute(http.MethodGet, "", mockHandleFunc)
 	})
 
-	assert.PanicsWithValue(t, "[route] path not start with '/'", func() {
+	assert.PanicsWithValue(t, "[route] path must start with '/'", func() {
 		r.addRoute(http.MethodGet, "home", mockHandleFunc)
 	})
 

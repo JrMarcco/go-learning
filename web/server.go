@@ -5,11 +5,7 @@ import (
 	"net/http"
 )
 
-type Server interface {
-	http.Handler
-
-	Start() error
-}
+type HandleFunc func(*Context)
 
 type HttpServer struct {
 	*router
@@ -23,8 +19,6 @@ func NewHttpServer(addr string) *HttpServer {
 		router: newRouter(),
 	}
 }
-
-var _ Server = &HttpServer{}
 
 func (h *HttpServer) Start() error {
 	l, err := net.Listen("tcp", h.addr)
@@ -49,6 +43,10 @@ func (h *HttpServer) Put(path string, handleFunc HandleFunc) {
 
 func (h *HttpServer) Delete(path string, handleFunc HandleFunc) {
 	h.addRoute(http.MethodDelete, path, handleFunc)
+}
+
+func (h *HttpServer) Group(prefix string) *Group {
+	return newGroup(h, prefix)
 }
 
 func (h *HttpServer) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {

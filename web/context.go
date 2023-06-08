@@ -16,8 +16,6 @@ type Context struct {
 	queryVals  url.Values
 }
 
-type HandleFunc func(ctx *Context)
-
 func (c *Context) RspJson(statusCode int, val any) error {
 
 	bs, err := json.Marshal(val)

@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"go_learning/simple_web/framework"
-	"go_learning/simple_web/provider/demo"
+	"github.com/jrmarcco/go-learning/simple_web/framework"
+	"github.com/jrmarcco/go-learning/simple_web/provider/demo"
 )
 
 func SubjectAddController(c *framework.Context) {

@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"go_learning/simple_web/framework"
-	"go_learning/simple_web/framework/middleware"
+	"github.com/jrmarcco/go-learning/simple_web/framework"
+	"github.com/jrmarcco/go-learning/simple_web/framework/middleware"
 )
 
 func RegisterRouter(core *framework.Core) {

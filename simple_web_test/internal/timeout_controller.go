@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"go_learning/simple_web/framework"
+	"github.com/jrmarcco/go-learning/simple_web/framework"
 	"time"
 )
 

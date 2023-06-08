@@ -22,7 +22,7 @@ func (r *router) addRoute(method string, path string, handleFunc HandleFunc) {
 	}
 
 	if path[0] != '/' {
-		panic("[route] path not start with '/'")
+		panic("[route] path must start with '/'")
 	}
 
 	root, ok := r.methodTrees[method]
