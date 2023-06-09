@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -12,6 +13,9 @@ type Context struct {
 	Req *http.Request
 	Rsp http.ResponseWriter
 
+	TraceCtx context.Context
+
+	MatchedRoute  string
 	RspStatusCode int
 	RspData       []byte
 

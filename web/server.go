@@ -56,8 +56,9 @@ func (h *HttpServer) Group(prefix string) *Group {
 func (h *HttpServer) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {
 
 	ctx := &Context{
-		Req: req,
-		Rsp: rsp,
+		Req:      req,
+		Rsp:      rsp,
+		TraceCtx: req.Context(),
 	}
 
 	mi := h.findRoute(ctx.Req.Method, ctx.Req.URL.Path)
@@ -79,6 +80,7 @@ func (h *HttpServer) ServeHTTP(rsp http.ResponseWriter, req *http.Request) {
 		}
 	}(handleFunc)
 
+	ctx.MatchedRoute = mi.matchedRoute
 	ctx.pathParams = mi.params
 	handleFunc(ctx)
 }

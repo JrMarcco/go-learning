@@ -54,7 +54,7 @@ func TestRouter_AddRoute(t *testing.T) {
 	mockHandleFunc := func(ctx *Context) {}
 
 	for _, tc := range tcs {
-		r.addRoute(tc.method, tc.path, mockHandleFunc)
+		r.addRoute(tc.method, tc.path, mockHandleFunc, []Middleware{})
 	}
 
 	wantRouter := &router{
@@ -183,48 +183,48 @@ func TestRouter_AddRoutePanic(t *testing.T) {
 	mockHandleFunc := func(ctx *Context) {}
 
 	assert.PanicsWithValue(t, "[route] empty path", func() {
-		r.addRoute(http.MethodGet, "", mockHandleFunc)
+		r.addRoute(http.MethodGet, "", mockHandleFunc, []Middleware{})
 	})
 
 	assert.PanicsWithValue(t, "[route] path must start with '/'", func() {
-		r.addRoute(http.MethodGet, "home", mockHandleFunc)
+		r.addRoute(http.MethodGet, "home", mockHandleFunc, []Middleware{})
 	})
 
 	registered := "/"
-	r.addRoute(http.MethodGet, registered, mockHandleFunc)
+	r.addRoute(http.MethodGet, registered, mockHandleFunc, []Middleware{})
 	assert.PanicsWithValue(
 		t,
 		fmt.Sprintf(fmt.Sprintf("[route] path '%s' has already registered", registered)),
 		func() {
-			r.addRoute(http.MethodGet, registered, mockHandleFunc)
+			r.addRoute(http.MethodGet, registered, mockHandleFunc, []Middleware{})
 		},
 	)
 
 	registered = "/user/edit"
-	r.addRoute(http.MethodPost, registered, mockHandleFunc)
+	r.addRoute(http.MethodPost, registered, mockHandleFunc, []Middleware{})
 	assert.PanicsWithValue(
 		t,
 		fmt.Sprintf(fmt.Sprintf("[route] path '%s' has already registered", registered)),
 		func() {
-			r.addRoute(http.MethodPost, registered, mockHandleFunc)
+			r.addRoute(http.MethodPost, registered, mockHandleFunc, []Middleware{})
 		},
 	)
 
-	r.addRoute(http.MethodGet, "/wildcardNode/*", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/wildcardNode/*", mockHandleFunc, []Middleware{})
 	assert.PanicsWithValue(
 		t,
 		"[route] can not register wildcardNode and paramNode at same time",
 		func() {
-			r.addRoute(http.MethodGet, "/wildcardNode/:id", mockHandleFunc)
+			r.addRoute(http.MethodGet, "/wildcardNode/:id", mockHandleFunc, []Middleware{})
 		},
 	)
 
-	r.addRoute(http.MethodGet, "/paramNode/:id", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/paramNode/:id", mockHandleFunc, []Middleware{})
 	assert.PanicsWithValue(
 		t,
 		"[route] can not register wildcardNode and paramNode at same time",
 		func() {
-			r.addRoute(http.MethodGet, "/paramNode/*", mockHandleFunc)
+			r.addRoute(http.MethodGet, "/paramNode/*", mockHandleFunc, []Middleware{})
 		},
 	)
 }
@@ -234,19 +234,19 @@ func TestRouter_findRoute(t *testing.T) {
 	r := newRouter()
 	mockHandleFunc := func(ctx *Context) {}
 
-	r.addRoute(http.MethodGet, "/", mockHandleFunc)
-	r.addRoute(http.MethodGet, "/user/get", mockHandleFunc)
-	r.addRoute(http.MethodGet, "/user/list", mockHandleFunc)
-	r.addRoute(http.MethodPost, "/user/edit", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/", mockHandleFunc, []Middleware{})
+	r.addRoute(http.MethodGet, "/user/get", mockHandleFunc, []Middleware{})
+	r.addRoute(http.MethodGet, "/user/list", mockHandleFunc, []Middleware{})
+	r.addRoute(http.MethodPost, "/user/edit", mockHandleFunc, []Middleware{})
 
-	r.addRoute(http.MethodGet, "/*", mockHandleFunc)
-	r.addRoute(http.MethodGet, "/*/*", mockHandleFunc)
-	r.addRoute(http.MethodGet, "/*/wild", mockHandleFunc)
-	r.addRoute(http.MethodGet, "/pic/*", mockHandleFunc)
-	r.addRoute(http.MethodGet, "/*/inner/*", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/*", mockHandleFunc, []Middleware{})
+	r.addRoute(http.MethodGet, "/*/*", mockHandleFunc, []Middleware{})
+	r.addRoute(http.MethodGet, "/*/wild", mockHandleFunc, []Middleware{})
+	r.addRoute(http.MethodGet, "/pic/*", mockHandleFunc, []Middleware{})
+	r.addRoute(http.MethodGet, "/*/inner/*", mockHandleFunc, []Middleware{})
 
-	r.addRoute(http.MethodGet, "/order/:id", mockHandleFunc)
-	r.addRoute(http.MethodGet, "/multi/:a/:b", mockHandleFunc)
+	r.addRoute(http.MethodGet, "/order/:id", mockHandleFunc, []Middleware{})
+	r.addRoute(http.MethodGet, "/multi/:a/:b", mockHandleFunc, []Middleware{})
 
 	tcs := []struct {
 		name    string

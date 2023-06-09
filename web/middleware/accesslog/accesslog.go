@@ -10,17 +10,16 @@ type MiddleWareBuilder struct {
 	logFunc func(msg string)
 }
 
-func (m *MiddleWareBuilder) LogFunc(logFunc func(msg string)) *MiddleWareBuilder {
-	m.logFunc = logFunc
-	return m
-}
-
 func NewBuilder() *MiddleWareBuilder {
 	return &MiddleWareBuilder{
 		logFunc: func(msg string) {
 			log.Println(msg)
 		},
 	}
+}
+func (m *MiddleWareBuilder) LogFunc(logFunc func(msg string)) *MiddleWareBuilder {
+	m.logFunc = logFunc
+	return m
 }
 
 type logMsg struct {

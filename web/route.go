@@ -15,7 +15,7 @@ func newRouter() *router {
 	}
 }
 
-func (r *router) addRoute(method string, path string, handleFunc HandleFunc, middlewares ...Middleware) {
+func (r *router) addRoute(method string, path string, handleFunc HandleFunc, middlewares MiddlewareChain) {
 
 	if path == "" {
 		panic("[route] empty path")
@@ -50,6 +50,7 @@ func (r *router) addRoute(method string, path string, handleFunc HandleFunc, mid
 	}
 	root.handleFunc = handleFunc
 	root.middlewares = middlewares
+	root.completeRoute = path
 }
 
 func (r *router) findRoute(method string, path string) matchInfo {
@@ -64,8 +65,9 @@ func (r *router) findRoute(method string, path string) matchInfo {
 			return matchInfo{matched: false}
 		}
 		return matchInfo{
-			matched:    true,
-			handleFunc: root.handleFunc,
+			matched:      true,
+			matchedRoute: "/",
+			handleFunc:   root.handleFunc,
 		}
 	}
 
@@ -98,10 +100,11 @@ func (r *router) findRoute(method string, path string) matchInfo {
 	}
 
 	return matchInfo{
-		matched:     root.handleFunc != nil,
-		handleFunc:  root.handleFunc,
-		middleWares: root.middlewares,
-		params:      params,
+		matched:      root.handleFunc != nil,
+		matchedRoute: root.completeRoute,
+		handleFunc:   root.handleFunc,
+		middleWares:  root.middlewares,
+		params:       params,
 	}
 }
 
@@ -114,13 +117,14 @@ const (
 type nodeType int
 
 type node struct {
-	typ          nodeType
-	path         string
-	children     map[string]*node
-	wildcardNode *node
-	paramNode    *node
-	handleFunc   HandleFunc
-	middlewares  MiddlewareChain
+	typ           nodeType
+	path          string
+	completeRoute string
+	children      map[string]*node
+	wildcardNode  *node
+	paramNode     *node
+	handleFunc    HandleFunc
+	middlewares   MiddlewareChain
 }
 
 func (n *node) createChild(path string) *node {
@@ -194,8 +198,9 @@ func (n *node) findSpecNode() (*node, bool) {
 }
 
 type matchInfo struct {
-	matched     bool
-	handleFunc  HandleFunc
-	middleWares MiddlewareChain
-	params      map[string]string
+	matched      bool
+	matchedRoute string
+	handleFunc   HandleFunc
+	middleWares  MiddlewareChain
+	params       map[string]string
 }

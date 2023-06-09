@@ -16,7 +16,9 @@ require (
 	github.com/prometheus/client_golang v1.14.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.14.0
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.3
+	go.opentelemetry.io/otel v1.16.0
+	go.opentelemetry.io/otel/trace v1.16.0
 	golang.org/x/sync v0.1.0
 	google.golang.org/genproto v0.0.0-20221118155620-16455021b5e6
 	google.golang.org/grpc v1.51.0
@@ -40,7 +42,8 @@ require (
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/go-logr/logr v1.2.3 // indirect
+	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
@@ -84,6 +87,7 @@ require (
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/zclconf/go-cty v1.8.0 // indirect
+	go.opentelemetry.io/otel/metric v1.16.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.2.0 // indirect
