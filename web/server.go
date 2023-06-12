@@ -17,10 +17,25 @@ type HttpServer struct {
 	addr string
 }
 
-func NewHttpServer(addr string) *HttpServer {
-	return &HttpServer{
-		addr:   addr,
+type SvrOpt func(server *HttpServer)
+
+func NewHttpServer(opts ...SvrOpt) *HttpServer {
+
+	server := &HttpServer{
+		addr:   ":8080",
 		router: newRouter(),
+	}
+
+	for _, opt := range opts {
+		opt(server)
+	}
+
+	return server
+}
+
+func SvrWithAddr(addr string) SvrOpt {
+	return func(server *HttpServer) {
+		server.addr = addr
 	}
 }
 

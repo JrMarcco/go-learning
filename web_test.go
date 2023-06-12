@@ -14,7 +14,7 @@ import (
 
 func TestWeb_HttpServer(t *testing.T) {
 
-	h := web.NewHttpServer(":8080")
+	h := web.NewHttpServer(web.SvrWithAddr(":8081"))
 
 	userApi := h.Group("/user")
 
@@ -22,7 +22,7 @@ func TestWeb_HttpServer(t *testing.T) {
 		Name:      "jrmarcco",
 		Subsystem: "http_request",
 		ConstLabels: map[string]string{
-			"inst_id": "1999",
+			"inst_id": "inst_8888",
 		},
 		Objectives: map[float64]float64{
 			0.5:   0.01,
