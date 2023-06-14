@@ -1,4 +1,4 @@
-package go_learning
+package test
 
 import (
 	"github.com/jrmarcco/go-learning/web"

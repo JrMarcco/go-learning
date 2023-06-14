@@ -19,6 +19,8 @@ type Context struct {
 	RspStatusCode int
 	RspData       []byte
 
+	UserVals map[string]any
+
 	pathParams map[string]string
 	queryVals  url.Values
 }
