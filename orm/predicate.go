@@ -11,6 +11,9 @@ const (
 	opNot = "NOT"
 )
 
+// Predicate 条件
+// 表达式的一种，由左右两个子表达式以及中间的操作符组成。
+// 其中部分操作符左子表达式可为空，例如 NOT。
 type Predicate struct {
 	left  Expression
 	op    op

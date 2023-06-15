@@ -2,6 +2,7 @@ package orm
 
 import (
 	"context"
+	"errors"
 	"reflect"
 	"strings"
 )
@@ -74,6 +75,8 @@ func (s *Selector[T]) Build() (*Statement, error) {
 	}, nil
 }
 
+// 构建表达式。
+// 该过程本是上是一个深度优先遍历二叉树的过程。
 func (s *Selector[T]) buildExpr(expr Expression) error {
 	if expr == nil {
 		return nil
@@ -93,6 +96,7 @@ func (s *Selector[T]) buildExpr(expr Expression) error {
 			s.sb.WriteByte('(')
 		}
 
+		// 递归左子表达式
 		if err := s.buildExpr(exprTyp.left); err != nil {
 			return nil
 		}
@@ -112,6 +116,7 @@ func (s *Selector[T]) buildExpr(expr Expression) error {
 			s.sb.WriteByte('(')
 		}
 
+		// 递归右子表达式
 		if err := s.buildExpr(exprTyp.right); err != nil {
 			return nil
 		}
@@ -119,6 +124,8 @@ func (s *Selector[T]) buildExpr(expr Expression) error {
 		if _, rok := exprTyp.right.(Predicate); rok {
 			s.sb.WriteByte(')')
 		}
+	default:
+		return errors.New("unsupported expression type")
 	}
 
 	return nil

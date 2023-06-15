@@ -6,6 +6,8 @@ type Column struct {
 
 func (c Column) expr() {}
 
+// Col 列信息
+// 一般作为左子表达式出现。
 func Col(name string) Column {
 	return Column{name: name}
 }
@@ -34,6 +36,8 @@ func (c Column) Lt(val any) Predicate {
 	}
 }
 
+// Value 值信息。
+// 一般作为右子表达出现。
 type Value struct {
 	val any
 }
