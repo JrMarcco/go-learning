@@ -17,3 +17,12 @@ type Querier[T any] interface {
 type Executor interface {
 	Exec(ctx context.Context) (sql.Result, error)
 }
+
+type Statement struct {
+	SQL  string
+	Args []any
+}
+
+type StatBuilder interface {
+	Build() (*Statement, error)
+}
