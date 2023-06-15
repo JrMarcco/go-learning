@@ -43,11 +43,31 @@ func TestSelector_Build(t *testing.T) {
 			},
 			wantErr: nil,
 		}, {
-			name:    "basic where",
+			name:    "single predicate where",
 			builder: (&Selector[TestModel]{}).Where(Col("Age").Eq(18)),
 			wantStat: &Statement{
-				SQL:  "SELECT * FROM `TestModel` WHERE `Age`=?;",
+				SQL:  "SELECT * FROM `TestModel` WHERE `Age` = ?;",
 				Args: []any{18},
+			},
+			wantErr: nil,
+		}, {
+			name:    "not predicate where",
+			builder: (&Selector[TestModel]{}).Where(Not(Col("Age").Eq(18))),
+			wantStat: &Statement{
+				SQL:  "SELECT * FROM `TestModel` WHERE NOT (`Age` = ?);",
+				Args: []any{18},
+			},
+			wantErr: nil,
+		}, {
+			name: "",
+			builder: (&Selector[TestModel]{}).Where(
+				Not(
+					Col("Age").Eq(18).And(Col("Id").Eq(1)),
+				),
+			),
+			wantStat: &Statement{
+				SQL:  "SELECT * FROM `TestModel` WHERE NOT ((`Age` = ?) AND (`Id` = ?));",
+				Args: []any{18, 1},
 			},
 			wantErr: nil,
 		},

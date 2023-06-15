@@ -89,16 +89,36 @@ func (s *Selector[T]) buildExpr(expr Expression) error {
 		s.addArg(exprTyp.val)
 	case Predicate:
 
+		if _, lok := exprTyp.left.(Predicate); lok {
+			s.sb.WriteByte('(')
+		}
+
 		if err := s.buildExpr(exprTyp.left); err != nil {
 			return nil
 		}
 
+		if _, lok := exprTyp.left.(Predicate); lok {
+			s.sb.WriteByte(')')
+		}
+
+		if exprTyp.left != nil {
+			s.sb.WriteByte(' ')
+		}
 		s.sb.WriteString(string(exprTyp.op))
+		if exprTyp.right != nil {
+			s.sb.WriteByte(' ')
+		}
+		if _, rok := exprTyp.right.(Predicate); rok {
+			s.sb.WriteByte('(')
+		}
 
 		if err := s.buildExpr(exprTyp.right); err != nil {
 			return nil
 		}
 
+		if _, rok := exprTyp.right.(Predicate); rok {
+			s.sb.WriteByte(')')
+		}
 	}
 
 	return nil
