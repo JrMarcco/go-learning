@@ -21,34 +21,43 @@ func IterateFunc(entity any) (map[string]*FuncInfo, error) {
 		return nil, InvalidTypErr
 	}
 
-	mcnt := typ.NumMethod()
-	fm := make(map[string]*FuncInfo, mcnt)
+	numMethod := typ.NumMethod()
+	fm := make(map[string]*FuncInfo, numMethod)
 
-	for i := 0; i < mcnt; i++ {
+	for i := 0; i < numMethod; i++ {
 		method := typ.Method(i)
-		mTyp := method.Type
+		methodTyp := method.Type
 
 		// 输入参数
 		// 注意第一个参数一定是接收器本身
-		inCnt := mTyp.NumIn()
-		in := make([]reflect.Type, 0, inCnt)
-		for j := 0; j < inCnt; j++ {
-			in = append(in, mTyp.In(j))
+		numIn := methodTyp.NumIn()
+		in := make([]reflect.Type, 0, numIn)
+		inVals := make([]reflect.Value, 0, numIn)
+
+		in = append(in, reflect.TypeOf(entity))
+		inVals = append(inVals, reflect.ValueOf(entity))
+
+		for j := 1; j < numIn; j++ {
+			inTyp := methodTyp.In(j)
+
+			in = append(in, inTyp)
+			inVals = append(inVals, reflect.Zero(inTyp))
 		}
 
 		// 输出参数
-		outCnt := mTyp.NumOut()
-		out := make([]reflect.Type, 0, outCnt)
-		for j := 0; j < outCnt; j++ {
-			out = append(out, mTyp.Out(j))
+		numOut := methodTyp.NumOut()
+		out := make([]reflect.Type, 0, numOut)
+
+		for j := 0; j < numOut; j++ {
+			out = append(out, methodTyp.Out(j))
 		}
 
 		// 处理输出
-		callRes := method.Func.Call([]reflect.Value{reflect.ValueOf(entity)})
-		res := make([]any, 0, len(callRes))
+		resVals := method.Func.Call(inVals)
+		res := make([]any, 0, len(resVals))
 
-		for _, cr := range callRes {
-			res = append(res, cr.Interface())
+		for _, val := range resVals {
+			res = append(res, val.Interface())
 		}
 
 		fm[method.Name] = &FuncInfo{
