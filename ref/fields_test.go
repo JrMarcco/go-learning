@@ -19,6 +19,11 @@ func TestIterateFields(t *testing.T) {
 			wantErr: NilErr,
 		},
 		{
+			name:    "zero val",
+			arg:     (*Base)(nil),
+			wantErr: ZeroValErr,
+		},
+		{
 			name:    "invalid type",
 			arg:     []string{},
 			wantErr: InvalidTypErr,

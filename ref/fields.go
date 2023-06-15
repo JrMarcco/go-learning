@@ -23,11 +23,15 @@ func iterateFields(entity any) (map[string]any, error) {
 	}
 
 	typ := reflect.TypeOf(entity)
+	val := reflect.ValueOf(entity)
+
+	if val.IsZero() {
+		return nil, ZeroValErr
+	}
+
 	if typ.Kind() != reflect.Struct && typ.Kind() != reflect.Pointer {
 		return nil, InvalidTypErr
 	}
-
-	val := reflect.ValueOf(entity)
 
 	for typ.Kind() == reflect.Pointer {
 		typ = typ.Elem()
