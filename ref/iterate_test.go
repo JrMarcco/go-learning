@@ -69,7 +69,7 @@ func TestIterate(t *testing.T) {
 	}
 }
 
-type iterateRes struct {
+type mapIterateRes struct {
 	keys []any
 	vals []any
 }
@@ -79,13 +79,13 @@ func TestIterateMap(t *testing.T) {
 		name    string
 		arg     any
 		wantErr error
-		wantRes iterateRes
+		wantRes mapIterateRes
 	}{
 		{
 			name:    "nil",
 			arg:     nil,
 			wantErr: nil,
-			wantRes: iterateRes{
+			wantRes: mapIterateRes{
 				keys: []any{},
 				vals: []any{},
 			},
@@ -103,7 +103,7 @@ func TestIterateMap(t *testing.T) {
 				"xyz": 456,
 			},
 			wantErr: nil,
-			wantRes: iterateRes{
+			wantRes: mapIterateRes{
 				keys: []any{"abc", "xyz"},
 				vals: []any{123, 456},
 			},
@@ -118,7 +118,7 @@ func TestIterateMap(t *testing.T) {
 				return
 			}
 
-			assert.Equal(t, tc.wantRes, iterateRes{keys: keys, vals: vals})
+			assert.Equal(t, tc.wantRes, mapIterateRes{keys: keys, vals: vals})
 		})
 	}
 }
