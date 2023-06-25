@@ -12,6 +12,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.13.0
 	github.com/marusama/cyclicbarrier v1.1.0
+	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/moby/moby v20.10.21+incompatible
 	github.com/prometheus/client_golang v1.14.0
 	github.com/spf13/cobra v1.6.1
