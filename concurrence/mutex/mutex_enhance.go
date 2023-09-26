@@ -26,13 +26,13 @@ func (m *Mutex) TryLock() bool {
 	}
 
 	// 如果处于唤醒、加锁或者饥饿状态，则不参与竞争返回 false
-	old := atomic.LoadInt32((*int32)(unsafe.Pointer(&m.Mutex)))
-	if old&(mutexLocked|mutexStarving|mutexWoken) != 0 {
+	oldVal := atomic.LoadInt32((*int32)(unsafe.Pointer(&m.Mutex)))
+	if oldVal&(mutexLocked|mutexStarving|mutexWoken) != 0 {
 		return false
 	}
 
-	new := old | mutexLocked
-	return atomic.CompareAndSwapInt32((*int32)(unsafe.Pointer(&m.Mutex)), old, new)
+	newVal := oldVal | mutexLocked
+	return atomic.CompareAndSwapInt32((*int32)(unsafe.Pointer(&m.Mutex)), oldVal, newVal)
 }
 
 func (m *Mutex) Count() int {
