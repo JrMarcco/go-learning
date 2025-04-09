@@ -3,15 +3,16 @@ package grpc
 import (
 	"context"
 	"fmt"
-	"github.com/moby/moby/pkg/pubsub"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"io"
 	"log"
 	"net"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/moby/pubsub"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func TestPubsub(t *testing.T) {

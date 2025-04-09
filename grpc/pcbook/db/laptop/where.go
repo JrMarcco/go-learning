@@ -3,7 +3,7 @@
 package laptop
 
 import (
-	"go-learning/grpc/pcbook/db/predicate"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/predicate"
 	"time"
 
 	"entgo.io/ent/dialect/sql"

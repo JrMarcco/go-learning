@@ -1,11 +1,12 @@
 package serializer
 
 import (
-	"github.com/stretchr/testify/require"
-	"go-learning/grpc/pcbook/pb"
-	"go-learning/grpc/pcbook/sample"
-	"google.golang.org/protobuf/proto"
 	"testing"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/pb"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/sample"
+	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestFileSerializer(t *testing.T) {

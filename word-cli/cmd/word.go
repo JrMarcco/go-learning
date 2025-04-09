@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	"go_learning/word-cli/internal/word"
 	"log"
+
+	"github.com/JrMarcco/go-learning/word-cli/internal/word"
+	"github.com/spf13/cobra"
 )
 
 const (

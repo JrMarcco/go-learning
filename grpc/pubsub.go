@@ -2,9 +2,10 @@ package grpc
 
 import (
 	"context"
-	"github.com/moby/moby/pkg/pubsub"
 	"strings"
 	"time"
+
+	"github.com/moby/pubsub"
 )
 
 type PubsubService struct {

@@ -3,8 +3,8 @@
 package db
 
 import (
-	"go-learning/grpc/pcbook/db/laptop"
-	"go-learning/grpc/pcbook/db/schema"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/laptop"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/schema"
 	"time"
 )
 

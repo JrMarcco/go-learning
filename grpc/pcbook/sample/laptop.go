@@ -1,7 +1,8 @@
 package sample
 
 import (
-	"go-learning/grpc/pcbook/pb"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/pb"
+
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

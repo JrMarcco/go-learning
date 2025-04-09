@@ -2,12 +2,14 @@ package service
 
 import (
 	"context"
+
+	"log"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/pb"
 	"github.com/google/uuid"
-	"go-learning/grpc/pcbook/db"
-	"go-learning/grpc/pcbook/pb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"log"
 )
 
 type LaptopService struct {

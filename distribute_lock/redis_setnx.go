@@ -1,9 +1,10 @@
 package distribute_lock
 
 import (
-	"github.com/go-redis/redis"
 	"log"
 	"time"
+
+	"github.com/go-redis/redis"
 )
 
 func incr() {

@@ -1,11 +1,12 @@
 package ast
 
 import (
-	"github.com/stretchr/testify/assert"
 	"go/ast"
 	"go/parser"
 	"go/token"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var fileCase = `

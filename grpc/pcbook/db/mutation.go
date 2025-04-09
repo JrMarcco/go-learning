@@ -6,8 +6,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"go-learning/grpc/pcbook/db/laptop"
-	"go-learning/grpc/pcbook/db/predicate"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/laptop"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/predicate"
 	"sync"
 	"time"
 

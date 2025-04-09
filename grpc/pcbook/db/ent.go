@@ -6,7 +6,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"go-learning/grpc/pcbook/db/laptop"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/laptop"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"

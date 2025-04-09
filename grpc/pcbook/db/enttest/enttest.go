@@ -4,11 +4,12 @@ package enttest
 
 import (
 	"context"
-	"go-learning/grpc/pcbook/db"
-	// required by schema hooks.
-	_ "go-learning/grpc/pcbook/db/runtime"
 
-	"go-learning/grpc/pcbook/db/migrate"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db"
+	// required by schema hooks.
+	_ "github.com/JrMarcco/go-learning/grpc/pcbook/db/runtime"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/migrate"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

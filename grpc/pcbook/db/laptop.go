@@ -4,7 +4,8 @@ package db
 
 import (
 	"fmt"
-	"go-learning/grpc/pcbook/db/laptop"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/laptop"
 	"strings"
 	"time"
 

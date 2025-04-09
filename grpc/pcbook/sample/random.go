@@ -1,9 +1,10 @@
 package sample
 
 import (
-	"go-learning/grpc/pcbook/pb"
 	"math/rand"
 	"time"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/pb"
 
 	"github.com/google/uuid"
 )

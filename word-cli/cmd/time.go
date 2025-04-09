@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	"go_learning/word-cli/internal/timer"
 	"log"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/JrMarcco/go-learning/word-cli/internal/timer"
+	"github.com/spf13/cobra"
 )
 
 var timeCmd = &cobra.Command{

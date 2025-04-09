@@ -1,8 +1,9 @@
 package main
 
 import (
-	"go_learning/word-cli/cmd"
 	"log"
+
+	"github.com/JrMarcco/go-learning/word-cli/cmd"
 )
 
 func main() {

@@ -6,8 +6,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"go-learning/grpc/pcbook/db/laptop"
 	"time"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/laptop"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"

@@ -5,8 +5,9 @@ package db
 import (
 	"context"
 	"fmt"
-	"go-learning/grpc/pcbook/db/laptop"
-	"go-learning/grpc/pcbook/db/predicate"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/laptop"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/predicate"
 	"math"
 
 	"entgo.io/ent/dialect/sql"

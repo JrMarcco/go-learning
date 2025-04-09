@@ -2,13 +2,14 @@ package service
 
 import (
 	"context"
+	"testing"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/pb"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/sample"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
-	"go-learning/grpc/pcbook/pb"
-	"go-learning/grpc/pcbook/sample"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"testing"
 )
 
 func (s *svcTestSuite) TestLaptopService_CreateLaptop() {

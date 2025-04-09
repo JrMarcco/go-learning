@@ -1,10 +1,11 @@
 package service
 
 import (
-	"entgo.io/ent/dialect/sql"
-	"go-learning/grpc/pcbook/config"
-	"go-learning/grpc/pcbook/db"
 	"log"
+
+	"entgo.io/ent/dialect/sql"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/config"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db"
 
 	_ "github.com/go-sql-driver/mysql"
 )

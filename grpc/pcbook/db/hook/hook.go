@@ -5,7 +5,8 @@ package hook
 import (
 	"context"
 	"fmt"
-	"go-learning/grpc/pcbook/db"
+
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db"
 )
 
 // The LaptopFunc type is an adapter to allow the use of ordinary

@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"log"
 
-	"go-learning/grpc/pcbook/db/migrate"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/migrate"
 
-	"go-learning/grpc/pcbook/db/laptop"
+	"github.com/JrMarcco/go-learning/grpc/pcbook/db/laptop"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
