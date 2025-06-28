@@ -2,9 +2,10 @@ package unsafe
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestNewAccessor(t *testing.T) {

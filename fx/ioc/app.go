@@ -2,11 +2,12 @@ package ioc
 
 import (
 	"context"
+	"net"
+	"net/http"
+
 	"github.com/JrMarcco/go-learning/fx/route"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"net"
-	"net/http"
 )
 
 var AppFxOpt = fx.Provide(

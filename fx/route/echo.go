@@ -1,9 +1,10 @@
 package route
 
 import (
-	"go.uber.org/zap"
 	"io"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 type EchoHandler struct {

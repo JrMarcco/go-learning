@@ -1,8 +1,9 @@
 package route
 
 import (
-	"go.uber.org/zap"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 type HelloHandler struct {

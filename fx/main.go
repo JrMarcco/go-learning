@@ -1,18 +1,20 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/JrMarcco/go-learning/fx/ioc"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
-	"net/http"
 )
 
 func main() {
 	fx.New(
+		ioc.ZapFxOpt,
 		ioc.AppFxOpt,
 		ioc.RouteFxOpt,
-		ioc.ZapFxOpt,
+
 		fx.WithLogger(func(logger *zap.Logger) fxevent.Logger {
 			return &fxevent.ZapLogger{Logger: logger}
 		}),

@@ -4,13 +4,14 @@ import (
 	"context"
 	"crypto/md5"
 	"errors"
-	"golang.org/x/sync/errgroup"
 	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 )
 
 func TestFirstErr(t *testing.T) {
