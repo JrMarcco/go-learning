@@ -45,7 +45,7 @@ func (m *MockServerService) SayHello(_ context.Context, req *MockReq) (*MockResp
 func TestClientProxy(t *testing.T) {
 	svr := NewServer()
 	serverSvc := &MockServerService{}
-	svr.RegisterRef(serverSvc)
+	svr.Register(serverSvc)
 
 	go func() {
 		err := svr.Start(":8081")
